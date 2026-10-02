@@ -1,0 +1,32 @@
+diff --git a/src/alejandra/src/rules/attr_set.rs b/src/alejandra/src/rules/attr_set.rs
+index efed4c0..b7df732 100644
+--- a/src/alejandra/src/rules/attr_set.rs
++++ b/src/alejandra/src/rules/attr_set.rs
+@@ -21,8 +21,7 @@ pub(crate) fn rule(
+         })
+         .count();
+
+-    let vertical = items_count > 1
+-        || children.has_comments()
++    let vertical = children.has_comments()
+         || children.has_newlines()
+         || build_ctx.vertical;
+
+@@ -58,7 +57,7 @@ pub(crate) fn rule(
+     steps.push(crate::builder::Step::Format(child));
+     if vertical {
+         steps.push(crate::builder::Step::Indent);
+-    } else if items_count > 0 && build_ctx.config.space_around_brackets {
++    } else if items_count > 0 {
+         steps.push(crate::builder::Step::Whitespace);
+     }
+
+@@ -118,7 +117,7 @@ pub(crate) fn rule(
+         steps.push(crate::builder::Step::Dedent);
+         steps.push(crate::builder::Step::NewLine);
+         steps.push(crate::builder::Step::Pad);
+-    } else if items_count > 0 && build_ctx.config.space_around_brackets {
++    } else {
+         steps.push(crate::builder::Step::Whitespace);
+     }
+     steps.push(crate::builder::Step::Format(child));

@@ -1,0 +1,42 @@
+diff --git a/src/alejandra/src/rules/pattern.rs b/src/alejandra/src/rules/pattern.rs
+index 615f29b..b0740e7 100644
+--- a/src/alejandra/src/rules/pattern.rs
++++ b/src/alejandra/src/rules/pattern.rs
+@@ -16,18 +16,9 @@ pub(crate) fn rule(
+         || !pattern.comments_after_initial_at.is_empty()
+         || !pattern.comments_before_end_at.is_empty();
+
+-    let has_ellipsis = pattern.arguments.iter().any(|argument| {
+-        if argument.item.is_some() {
+-            argument.item.as_ref().unwrap().kind()
+-                == rnix::SyntaxKind::TOKEN_ELLIPSIS
+-        } else {
+-            false
+-        }
+-    });
+-
+     let arguments_count = pattern.arguments.len();
+
+-    let arguments_count_for_tall = if has_ellipsis { 2 } else { 1 };
++    let arguments_count_for_tall = 100;
+
+     let vertical = has_comments
+         || arguments_count > arguments_count_for_tall
+@@ -64,6 +55,8 @@ pub(crate) fn rule(
+     ));
+     if vertical {
+         steps.push(crate::builder::Step::Indent);
++    } else {
++        steps.push(crate::builder::Step::Whitespace)
+     }
+
+     // arguments
+@@ -136,6 +129,8 @@ pub(crate) fn rule(
+             steps.push(crate::builder::Step::NewLine);
+             steps.push(crate::builder::Step::Pad);
+         }
++    } else if arguments_count > 0 {
++        steps.push(crate::builder::Step::Whitespace)
+     }
+     steps.push(crate::builder::Step::Token(
+         rnix::SyntaxKind::TOKEN_R_BRACE,

@@ -1,12 +1,16 @@
 {
   inputs.nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
 
-  outputs = inputs: {
-    hydraJobs = { inherit (inputs.self) packages; };
-    packages."x86_64-linux" = let
-      pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-    in {
-      hello = pkgs.callPackage ./packages/hello.nix { };
-    };
+  outputs = { self, nixpkgs }: let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+    sources = import ./npins;
+  in {
+    hydraJobs = { inherit (self) packages; };
+    packages.${system} =
+      ./packages
+      |> builtins.readDir
+      |> nixpkgs.lib.filterAttrs (_: type: type == "directory")
+      |> builtins.mapAttrs (name: _: pkgs.callPackage "${self}/packages/${name}" { inherit sources; });
   };
 }

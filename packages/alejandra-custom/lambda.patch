@@ -1,0 +1,23 @@
+diff --git a/src/alejandra/src/rules/lambda.rs b/src/alejandra/src/rules/lambda.rs
+index 9ef45ad..19b617d 100644
+--- a/src/alejandra/src/rules/lambda.rs
++++ b/src/alejandra/src/rules/lambda.rs
+@@ -56,6 +56,7 @@ pub(crate) fn rule(
+     let child = children.get_next().unwrap();
+     if vertical {
+         if comment
++            || (build_ctx.indentation == 0 && child.kind() != rnix::SyntaxKind::NODE_LAMBDA)
+             || !matches!(
+                 child.kind(),
+                 rnix::SyntaxKind::NODE_ATTR_SET
+@@ -81,6 +82,10 @@ pub(crate) fn rule(
+                 steps.push(crate::builder::Step::Indent);
+             }
+
++            if build_ctx.indentation == 0 && child.kind() != rnix::SyntaxKind::NODE_LAMBDA {
++                steps.push(crate::builder::Step::NewLine);
++            }
++
+             steps.push(crate::builder::Step::NewLine);
+             steps.push(crate::builder::Step::Pad);
+             steps.push(crate::builder::Step::FormatWider(child));
