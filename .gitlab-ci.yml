@@ -1,0 +1,37 @@
+default:
+  image: nixos/nix:latest
+
+stages:
+  - update
+
+variables:
+  NIX_CONFIG: |
+    experimental-features = nix-command flakes pipe-operators
+
+auto-update:
+  stage: update
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
+  before_script:
+    - git config --global user.name "GitLab Update Bot"
+    - git config --global user.email "bot@gitlab.com"
+    - git remote set-url origin "https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git"
+
+    - git fetch origin main
+    - git checkout main
+
+  script:
+    - nix flake update
+    - nix run nixpkgs#npins -- update
+
+    - git add flake.lock npins/sources.json
+    - |
+      if ! git diff-index --quiet HEAD; then
+        git commit -m "chore: Bump flake inputs and npins sources"
+        git push origin main
+      else
+        echo "All up to date Nothing to do."
+      fi
+

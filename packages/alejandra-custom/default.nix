@@ -1,9 +1,9 @@
-{ fetchFromGitHub, lib, rustPlatform, ... }:
+{ pkgs, ... }:
 
-rustPlatform.buildRustPackage {
+pkgs.rustPlatform.buildRustPackage {
   pname = "alejandra";
   version = "4.0.0-custom";
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "kamadorueda";
     repo = "alejandra";
     rev = "8c4a4a572bee519b04e9bb9207e7d993f55ecb4f";
@@ -22,7 +22,7 @@ rustPlatform.buildRustPackage {
   cargoHash = "sha256-MfDOw3h/aU16CVm1EsLAcFwW2ZOvAnYwg3AGcG4ll3g=";
   doCheck = false;
 
-  meta = with lib; {
+  meta = with pkgs.lib; {
     description = "The Uncompromising Nix Code Formatter (Patched)";
     homepage = "https://github.com/kamadorueda/alejandra";
     license = licenses.unlicense;
