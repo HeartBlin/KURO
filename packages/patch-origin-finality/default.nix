@@ -17,7 +17,7 @@ pkgs.python3Packages.buildPythonApplication {
   meta = with pkgs.lib; {
     description = "A patching utiliy for GLIMs NixOS configuration for my two ISOs";
     license = with licenses; [ mit unlicense ];
-    maintainers = [ heartblin ];
+    maintainers = [ "heartblin" ];
     platforms = [ "x86_64-linux" ];
   };
 }
