@@ -3,8 +3,11 @@
 
   outputs = { self, nixpkgs }: let
     system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
     sources = import ./npins;
+    pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
   in {
     hydraJobs = { inherit (self) packages; };
     packages.${system} =
