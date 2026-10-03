@@ -20,6 +20,11 @@ in
             DRM_NOUVEAU = lib.mkForce no;
             DRM_AMDGPU_SI = lib.mkForce no;
             DRM_AMDGPU_CIK = lib.mkForce no;
+
+            DRM_AMD_DC_SI = lib.mkForce (option no);
+            DRM_I915_GVT = lib.mkForce (option no);
+            DRM_I915_GVT_KVMGT = lib.mkForce (option no);
+            DRM_NOUVEAU_SVM = lib.mkForce (option no);
           });
       };
   })
