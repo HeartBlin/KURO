@@ -9,13 +9,17 @@ in
   pkgs.linux_zen.override (old: {
     stdenv = llvmStdenv;
     extraMakeFlags = (old.extraMakeFlags or [ ]) ++ [ "LLVM=1" ];
-    structuredExtraConfig =
-      (old.structuredExtraConfig or { })
-      // (with lib.kernel; {
-        DRM_I915 = no;
-        DRM_XE = no;
-        DRM_NOUVEAU = no;
-        DRM_AMDGPU_SI = no;
-        DRM_AMDGPU_CIK = no;
-      });
+    argsOverride =
+      (old.argsOverride or { })
+      // {
+        structuredExtraConfig =
+          (old.structuredExtraConfig or { })
+          // (with lib.kernel; {
+            DRM_I915 = lib.mkForce no;
+            DRM_XE = lib.mkForce no;
+            DRM_NOUVEAU = lib.mkForce no;
+            DRM_AMDGPU_SI = lib.mkForce no;
+            DRM_AMDGPU_CIK = lib.mkForce no;
+          });
+      };
   })
