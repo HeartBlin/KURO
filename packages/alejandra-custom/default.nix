@@ -10,7 +10,7 @@ rustPlatform.buildRustPackage {
     hash = "sha256-pu6dVB6NrIj90rrqCgJ5pPlBzS76pW4WA6rE1rD1Gp8=";
   };
 
-  RUSTFLAGS = "-C target-cpu=x86-64-v3";
+  RUSTFLAGS = "-C target-cpu=x86-64-v3 -C lto=fat";
   patches = [
     ./adblock.patch
     ./attr_set.patch
