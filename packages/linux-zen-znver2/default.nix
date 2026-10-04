@@ -21,7 +21,9 @@ in
         structuredExtraConfig =
           (old.structuredExtraConfig or { })
           // (with lib.kernel; {
-            LTO_CLANG_THIN = lib.mkForce yes;
+            LTO_CLANG_FULL = lib.mkForce yes;
+            LTO_CLANG_THIN = lib.mkForce no;
+            LTO_NONE = lib.mkForce no;
 
             DRM_AMDGPU_CIK = lib.mkForce no;
             DRM_AMDGPU_SI = lib.mkForce no;
