@@ -1,0 +1,46 @@
+name: Auto Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3/6 * * *' # Every six hours UTC+3
+
+permissions:
+  contents: write
+
+jobs:
+  auto-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: NixOS/nix-installer-action@v1.0.0
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes pipe-operators
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Update Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Update dependencies
+        run: |
+          nix flake update
+          nix run nixpkgs#npins -- update
+
+      - name: Commit and push changes
+        run: |
+          git add flake.lock npins/sources.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: Bump flake inputs and npins sources"
+            git push origin HEAD:main
+          else
+            echo "All up to date. Nothing to do."
+          fi
