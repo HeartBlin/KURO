@@ -64,7 +64,7 @@ jobs:
 
             echo "::endgroup::"
           done
-          
+
       - name: Verify build before push
         run: nix flake check
 
