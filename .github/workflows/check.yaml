@@ -1,0 +1,30 @@
+name: Flake Check
+
+on:
+  workflow_dispatch:
+  push:
+    branched: ['**']
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: NixOS/nix-installer-action@v1.0.0
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes pipe-operators
+            extra-substituters = https://cache.heartblin.eu
+            extra-trusted-public-keys = hydra.heartblin.eu-1:Av5Jl8Y2V+uagfqMbKvTKY7G8F2uWaVekhcBhoBxE5Y=
+
+      - name: Flake check
+        run: nix flake check
