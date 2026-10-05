@@ -2,7 +2,7 @@
 
 pkgs.python3Packages.buildPythonApplication {
   pname = "patch-origin-finality";
-  version = "0.14";
+  version = "0.1.0";
   src = ./.;
 
   propagatedBuildInputs = with pkgs.python3Packages; [
