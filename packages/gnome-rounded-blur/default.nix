@@ -2,7 +2,7 @@
 
 pkgs.stdenv.mkDerivation {
   pname = "gnome-rounded-blur";
-  version = "0-unstable-2026-10-05";
+  version = "1.0.1-unstable-2026-08-09";
   src = pkgs.fetchFromGitHub {
     owner = "kancko";
     repo = "gnome-rounded-blur";
