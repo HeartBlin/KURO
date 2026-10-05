@@ -44,9 +44,8 @@ jobs:
             alejandra-custom
             ghostty-znver2
             patch-origin-finality
-
-        run:
-          for path in packages/*; do
+        run: |
+          for dir in packages/*; do
             name=$(basename "$dir")
             if [ ! -f "$dir/default.nix" ]; then
               echo "Skipping $name (no default.nix)"
@@ -60,7 +59,7 @@ jobs:
 
             echo "::group::$name"
 
-            version=$(nix eval --raw ".#packages.$system.$name.version" 2>/dev/null || true)
+            version=$(nix eval --raw ".#packages.x86_64-linux.$name.version" 2>/dev/null || true)
             args=(--flake --commit)
             if [[ "$version" == *-unstable-* ]]; then
               args+=(--version=branch)
