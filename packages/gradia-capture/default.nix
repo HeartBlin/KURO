@@ -1,10 +1,14 @@
-{ pkgs, sources, ... }:
+{ pkgs, ... }:
 
 pkgs.stdenvNoCC.mkDerivation rec {
   pname = "gnome-shell-extension-gradia-capture";
-
-  src = sources.gradia-capture;
-  version = builtins.substring 0 8 sources.gradia-capture.revision;
+  version = "0-unstable-2026-08-22";
+  src = pkgs.fetchFromGitHub {
+    owner = "AlexanderVanhee";
+    repo = "gradia-capture";
+    rev = "f70a2127d0a9acc3c9d4d8198361fc9f4e14818f";
+    hash = "sha256-XruZoUTbDT/qOPmFj5/CyvQfhH6Tg0IqJ4JPVMiu5zQ=";
+  };
 
   nativeBuildInputs = [ pkgs.glib ];
 

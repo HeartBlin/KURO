@@ -29,17 +29,52 @@ jobs:
           git config user.name "GitHub Update Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Update dependencies
+      - name: Update flake inputs
         run: |
           nix flake update
-          nix run nixpkgs#npins -- update
-
-      - name: Commit and push changes
-        run: |
-          git add flake.lock npins/sources.json
-
+          git add flake.lock
           if ! git diff --cached --quiet; then
-            git commit -m "chore: Bump flake inputs and npins sources"
+            git commit -m "chore: Bump flake inputs"
+          fi
+
+      - name: Update packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXCLUDE: |
+            alejandra-custom
+            ghostty-znver2
+            patch-origin-finality
+
+        run:
+          for path in packages/*; do
+            name=$(basename "$dir")
+            if [ ! -f "$dir/default.nix" ]; then
+              echo "Skipping $name (no default.nix)"
+              continue
+            fi
+
+            if grep -qxF "$name" <<< "$EXCLUDE"; then
+              echo "Skipping $name (excluded)"
+              continue
+            fi
+
+            echo "::group::$name"
+
+            version=$(nix eval --raw ".#packages.$system.$name.version" 2>/dev/null || true)
+            args=(--flake --commit)
+            if [[ "$version" == *-unstable-* ]]; then
+              args+=(--version=branch)
+            fi
+
+            nix run nixpkgs#nix-update -- "${args[@]}" "$name" \
+              || echo "::warning::Failed to update $name"
+
+            echo "::endgroup::"
+          done
+
+      - name: Push changes
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
             git push origin HEAD:main
           else
             echo "All up to date. Nothing to do."
