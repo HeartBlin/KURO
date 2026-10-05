@@ -21,7 +21,8 @@
         rules = {
           brackets = {
             min-spaces-inside = 0;
-            max-spaces-inside = 1; };
+            max-spaces-inside = 1;
+          };
           document-start = "disable";
           line-length.max = 120;
           truthy.allowed-values = [ "true" "false" "on" ];
