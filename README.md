@@ -8,10 +8,7 @@ The only thing I'm sure of is that the packages exported would work, however the
 
 #### Dual-licensed under the [UNLICENSE](UNLICENSE) or [MIT](LICENSE).
 
-## Cache Details
-
-Domain: `cache.heartblin.eu`
-
-Public key: `hydra.heartblin.eu-1:Av5Jl8Y2V+uagfqMbKvTKY7G8F2uWaVekhcBhoBxE5Y=`
-
-
+> [!IMPORTANT]
+> Domain: `cache.heartblin.eu`
+>
+> Public key: `hydra.heartblin.eu-1:Av5Jl8Y2V+uagfqMbKvTKY7G8F2uWaVekhcBhoBxE5Y=`
