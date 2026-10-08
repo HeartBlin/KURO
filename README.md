@@ -9,6 +9,6 @@ The only thing I'm sure of is that the packages exported would work, however the
 > [!IMPORTANT]
 > Domain: `cache.heartblin.eu`
 >
-> Public key: `hydra.heartblin.eu-1:Av5Jl8Y2V+uagfqMbKvTKY7G8F2uWaVekhcBhoBxE5Y=`
+> Public key: `cache.heartblin.eu-1:XicnTDFCv9Nfhfz7hgQi1AoBqs5z5xTmzhTydB+tK6Q=`
 
 #### Dual-licensed under the [UNLICENSE](UNLICENSE) or [MIT](LICENSE).
