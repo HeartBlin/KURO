@@ -15,7 +15,7 @@
 
   outputs = inputs: let
     system = "x86_64-linux";
-    alejandra = inputs.self.kuro.packages.${system}.alejandra-custom;
+    alejandra = inputs.self.packages.${system}.alejandra-custom;
     pkgs = import inputs.nixpkgs {
       inherit system;
       config.allowUnfree = true;
