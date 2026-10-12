@@ -1,41 +1,46 @@
 {
-  inputs.nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
-  outputs = { self, nixpkgs }: let
+  inputs = {
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.zst";
+
+    hjem = {
+      url = "github:feel-co/hjem";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = inputs: let
     system = "x86_64-linux";
-    inherit (nixpkgs) lib;
-    pkgs = import nixpkgs {
+    alejandra = inputs.self.kuro.packages.${system}.alejandra-custom;
+    pkgs = import inputs.nixpkgs {
       inherit system;
       config.allowUnfree = true;
     };
   in {
-    hydraJobs = { inherit (self) packages; };
+    inherit (inputs.hjem // inputs.lanzaboote) nixosModules;
+    hydraJobs = { inherit (inputs.self) packages; };
     packages.${system} =
-      ./packages
-      |> builtins.readDir
-      |> nixpkgs.lib.filterAttrs (_: type: type == "directory")
-      |> builtins.mapAttrs (name: _: pkgs.callPackage "${self}/packages/${name}" { });
+      (
+        ./packages
+        |> builtins.readDir
+        |> inputs.nixpkgs.lib.filterAttrs (_: type: type == "directory")
+        |> builtins.mapAttrs (name: _: pkgs.callPackage "${inputs.self}/packages/${name}" { })
+      )
+      // (inputs.hjem.packages."x86_64-linux" or { })
+      // (inputs.lanzaboote.packages."x86_64-linux" or { });
 
-    checks.${system}.default = let
-      yamllintConfig = builtins.toFile "yamllint.yaml" (builtins.toJSON {
-        extends = "default";
-        rules = {
-          brackets = {
-            min-spaces-inside = 0;
-            max-spaces-inside = 1;
-          };
-          document-start = "disable";
-          line-length.max = 120;
-          truthy.allowed-values = [ "true" "false" "on" ];
-        };
-      });
-    in
-      pkgs.runCommand "check-overall" { } ''
-        cd ${self}
-        ${lib.getExe self.packages.${system}.alejandra-custom} --check .
-        ${lib.getExe pkgs.deadnix} --fail .
-        ${lib.getExe pkgs.statix} check .
-        ${lib.getExe pkgs.yamllint} -c ${yamllintConfig} .
-        touch $out
-      '';
+    checks.${system}.overall = pkgs.writeShellApplication {
+      name = "check";
+      text = ''deadnix --fail . && statix check . && alejandra --check .'';
+      runtimeInputs = [
+        alejandra
+        pkgs.deadnix
+        pkgs.statix
+      ];
+    };
   };
 }

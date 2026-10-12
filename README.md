@@ -4,7 +4,7 @@
 
 I keep package definitions here so that I can run CI on them daily. Used mostly by [SHiRO](https://github.com/HeartBlin/SHiRO), but I don't see reasons why others could not also use them. After all, most are just GNOME related things.
 
-The only thing I'm sure of is that the packages exported would work, however they may or may not get removed at any point. YMMV.
+Also, I keep some projects that lack a cache (or that I just want to cache myself) here, such as `hjem` and `lanzaboote`.
 
 > [!IMPORTANT]
 > Domain: `cache.heartblin.eu`
