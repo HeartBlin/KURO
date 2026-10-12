@@ -21,7 +21,6 @@
       config.allowUnfree = true;
     };
   in {
-    inherit (inputs.hjem // inputs.lanzaboote) nixosModules;
     hydraJobs = { inherit (inputs.self) packages; };
     packages.${system} =
       (
@@ -32,6 +31,10 @@
       )
       // (inputs.hjem.packages."x86_64-linux" or { })
       // (inputs.lanzaboote.packages."x86_64-linux" or { });
+
+    nixosModules =
+      (inputs.hjem.nixosModules or { })
+      // (inputs.lanzaboote.nixosModules or { });
 
     checks.${system}.overall = pkgs.writeShellApplication {
       name = "check";
