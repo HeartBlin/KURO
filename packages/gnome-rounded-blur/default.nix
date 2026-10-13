@@ -2,12 +2,12 @@
 
 pkgs.stdenv.mkDerivation {
   pname = "gnome-rounded-blur";
-  version = "1.0.1-unstable-2026-08-09";
+  version = "1.0.2-unstable-2026-10-13";
   src = pkgs.fetchFromGitHub {
     owner = "kancko";
     repo = "gnome-rounded-blur";
-    rev = "f3bfcc796e1214c1e1d4287ee35cb132ad8133f0";
-    hash = "sha256-MBeb0/Drt0UQ/K8UaW93ae9OaV3L5nhFZB2tPwj47co=";
+    rev = "a4db9e5947b1cea0a05c57768356921420f91293";
+    hash = "sha256-2zRQnORmVQMuubLOZ+0mHDQhDoc7V/+2JM3gmYPia2s=";
   };
 
   nativeBuildInputs = with pkgs; [
