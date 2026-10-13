@@ -21,10 +21,4 @@ pkgs.stdenv.mkDerivation {
     [ glib mutter ]
     ++ pkgs.mutter.buildInputs
     ++ pkgs.mutter.propagatedBuildInputs;
-
-  postPatch = ''
-    apiver=$(pkg-config --list-all | grep -o 'libmutter-[0-9]\+' | sort -u | tail -n1 | sed 's/libmutter-//')
-    substituteInPlace meson.build \
-      --replace-fail "dependency('libmutter-18')" "dependency('libmutter-$apiver')"
-  '';
 }
